@@ -1,0 +1,4 @@
+snapmylife is an Android native app which reminds the user once per day to take his picture. The pictures are hosted
+on an external server, and the pictures are stitched together into a video each time the user adds a new picture.
+The app has two buttons: "take picture" and "view video." This decription subject to change. 10/10/2012
+-Scott
