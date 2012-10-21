@@ -17,8 +17,12 @@ import org.apache.http.protocol.HttpContext;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -29,34 +33,49 @@ import com.parse.entity.mime.content.FileBody;
 import com.parse.entity.mime.content.StringBody;
 
 public class MainActivity extends Activity {
-
+	
+	Uri currImageURI;
+	String currImageStr = "filler";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-    
-    
+       
     public void selectPicture(View view) {
-    	Context context = getApplicationContext();
-    	CharSequence text = "Hello toast!";
-    	int duration = Toast.LENGTH_SHORT;
-
-    	Toast toast = Toast.makeText(context, text, duration);
-    	toast.show();
-    	
-    	/*
-    	Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.setType("image/*");
-        //intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(i); 
-        */
+    	Intent intent = new Intent();
+    	intent.setType("image/*");
+    	intent.setAction(Intent.ACTION_GET_CONTENT);
+    	startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (resultCode == RESULT_OK) {
+	    	if (requestCode == 1) {
+	    		// currImageURI is the global variable I’m using to hold the content:// URI of the image
+	    		currImageURI = data.getData();
+	    		System.out.println("URI extracted");
+	    		System.out.println(currImageURI);
+	    		currImageStr = getRealPathFromURI(currImageURI);
+	    		System.out.println("currImageStr is: ");
+	    		System.out.println(currImageStr);
+	        	postData();
+	        	System.out.println("After postData in selectPicture");
+	    	}
+    	}
+    }
+    
+    private String getRealPathFromURI(Uri contentURI) {
+        Cursor cursor = getContentResolver()
+                   .query(contentURI, null, null, null, null); 
+        cursor.moveToFirst(); 
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA); 
+        return cursor.getString(idx); 
     }
     
     
-
-    
-    public void postData(View view) {
+    public void postData() {
     	StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
     	StrictMode.setThreadPolicy(policy); 
     	
@@ -70,9 +89,9 @@ public class MainActivity extends Activity {
         	
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-            nameValuePairs.add(new BasicNameValuePair("username", "123"));
-            nameValuePairs.add(new BasicNameValuePair("password", "onetwothree"));
-            nameValuePairs.add(new BasicNameValuePair("file", "/mnt/sdcard/Pictures/1.png"));
+            nameValuePairs.add(new BasicNameValuePair("username", "user1"));
+            nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+            nameValuePairs.add(new BasicNameValuePair("file", currImageStr));
             System.out.println("Finished with assigning name-value pairs");
             
             for(int index=0; index < nameValuePairs.size(); index++) {
@@ -97,7 +116,6 @@ public class MainActivity extends Activity {
         	Context context = getApplicationContext();
         	CharSequence text = "post code complete!";
         	int duration = Toast.LENGTH_SHORT;
-
         	Toast toast = Toast.makeText(context, text, duration);
         	toast.show();
             
