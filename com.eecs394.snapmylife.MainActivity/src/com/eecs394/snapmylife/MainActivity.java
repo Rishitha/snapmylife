@@ -16,9 +16,12 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Toast;
 
 import com.parse.entity.mime.HttpMultipartMode;
 import com.parse.entity.mime.MultipartEntity;
@@ -33,30 +36,44 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
     
-    public void selectPicture() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);   	
+    
+    public void selectPicture(View view) {
+    	Context context = getApplicationContext();
+    	CharSequence text = "Hello toast!";
+    	int duration = Toast.LENGTH_SHORT;
+
+    	Toast toast = Toast.makeText(context, text, duration);
+    	toast.show();
+    	
+    	/*
+    	Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.setType("image/*");
+        //intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(i); 
+        */
     }
     
     
 
     
-    public void postData() {
+    public void postData(View view) {
+    	StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    	StrictMode.setThreadPolicy(policy); 
+    	
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
         HttpContext localContext = new BasicHttpContext();
-        HttpPost httppost = new HttpPost("http://www.yoursite.com/script.php");
+        HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/uploadFile.py");
 
         try {
         	MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         	
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-            nameValuePairs.add(new BasicNameValuePair("id", "12345"));
-            nameValuePairs.add(new BasicNameValuePair("stringdata", "AndDev is Cool!"));
-            nameValuePairs.add(new BasicNameValuePair("image", "image filepath goes here"));
+            nameValuePairs.add(new BasicNameValuePair("username", "123"));
+            nameValuePairs.add(new BasicNameValuePair("password", "onetwothree"));
+            nameValuePairs.add(new BasicNameValuePair("file", "/mnt/sdcard/Pictures/1.png"));
+            System.out.println("Finished with assigning name-value pairs");
             
             for(int index=0; index < nameValuePairs.size(); index++) {
                 if(nameValuePairs.get(index).getName().equalsIgnoreCase("image")) {
@@ -73,6 +90,16 @@ public class MainActivity extends Activity {
             
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost, localContext);
+            System.out.println("got http response:");
+            System.out.println(response);
+          
+            
+        	Context context = getApplicationContext();
+        	CharSequence text = "post code complete!";
+        	int duration = Toast.LENGTH_SHORT;
+
+        	Toast toast = Toast.makeText(context, text, duration);
+        	toast.show();
             
         } catch (ClientProtocolException e) {
             // TODO Auto-generated catch block
