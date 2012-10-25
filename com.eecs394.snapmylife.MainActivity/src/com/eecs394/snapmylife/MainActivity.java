@@ -57,6 +57,48 @@ public class MainActivity extends Activity {
     	startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
     }
     
+    public void clearData(View view) {
+    	StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    	StrictMode.setThreadPolicy(policy);
+    	
+    	HttpClient httpclient = new DefaultHttpClient();
+        HttpContext localContext = new BasicHttpContext();
+        HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/clear.py");
+        
+        
+        try {
+        	MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        	
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+            nameValuePairs.add(new BasicNameValuePair("username", "user1"));
+            nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+            nameValuePairs.add(new BasicNameValuePair("clear", "True"));
+            System.out.println("Finished with assigning name-value pairs");
+            
+            for(int index=0; index < nameValuePairs.size(); index++) {
+                    // Normal string data
+                    entity.addPart(nameValuePairs.get(index).getName(), new StringBody(nameValuePairs.get(index).getValue()));
+            }
+  
+            httppost.setEntity(entity);
+            
+            HttpResponse response = httpclient.execute(httppost, localContext);
+            rstring = getResponseBody(response);
+            System.out.println("got http response:");
+            System.out.println(rstring);
+            
+        	Context context = getApplicationContext();
+        	CharSequence text = "Data cleared!";
+        	int duration = Toast.LENGTH_SHORT;
+        	Toast toast = Toast.makeText(context, text, duration);
+        	toast.show();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    } 
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == RESULT_OK) {
