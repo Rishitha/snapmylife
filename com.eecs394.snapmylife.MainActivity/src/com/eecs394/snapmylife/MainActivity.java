@@ -90,13 +90,13 @@ public class MainActivity extends Activity {
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/uploadFile.py");
 
-		double slider_spf = 0.5;
+		double slider_spf = 0.2;
 
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
-			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
+			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
-			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
+			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -164,7 +164,7 @@ public class MainActivity extends Activity {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
-			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
+			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -197,9 +197,6 @@ public class MainActivity extends Activity {
 			try {
 				MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-				double slider_spf;
-				// get slider_spf
-				slider_spf = 0.5;
 
 				// Add your data
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
@@ -219,10 +216,11 @@ public class MainActivity extends Activity {
 				// Execute HTTP Post Request
 				HttpResponse response = httpclient.execute(httppost, localContext);
 				//Get string from server's response
-				HttpEntity httpentity = response.getEntity();
-				rstring = EntityUtils.toString(httpentity);
-				System.out.println("RESPONSE IS: ");
-				System.out.println(rstring);
+				//HttpEntity httpentity = response.getEntity();
+				//rstring = EntityUtils.toString(httpentity);
+				//System.out.println("RESPONSE IS: ");
+				//System.out.println(rstring);
+				rstring = "*";
 
 
 				Context context = getApplicationContext();
