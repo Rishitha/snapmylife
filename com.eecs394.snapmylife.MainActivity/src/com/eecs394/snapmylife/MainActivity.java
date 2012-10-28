@@ -93,6 +93,7 @@ public class MainActivity extends Activity {
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
@@ -122,6 +123,7 @@ public class MainActivity extends Activity {
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
@@ -148,6 +150,7 @@ public class MainActivity extends Activity {
 		try {
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("fps", Double.toString(slider_spf)));
 			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
 			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
