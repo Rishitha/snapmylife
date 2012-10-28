@@ -26,6 +26,24 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" 
 	        android:onClick="clearData"/>
+	    
+	    <Button 
+	        android:text = "Fast"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:onClick="postSPFfast"/>
+	    
+	    <Button 
+	        android:text = "Medium"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:onClick="postSPFmed"/>
+	    
+	    <Button 
+	        android:text = "Slow"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" 
+	        android:onClick="postSPFslow"/>
 	</LinearLayout>
     
 

@@ -84,6 +84,8 @@ public class MainActivity extends Activity {
 
 	//Called by "fast" button
 	public void postSPFfast(View view) {
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy); 
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/uploadFile.py");
@@ -104,6 +106,8 @@ public class MainActivity extends Activity {
 			//Get string from server's response
 			HttpEntity httpentity = response.getEntity();
 			rstring = EntityUtils.toString(httpentity);
+			System.out.println("RESPONSE IS: ");
+			System.out.println(rstring);
 
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -114,6 +118,8 @@ public class MainActivity extends Activity {
 
 	//Called by "medium" button
 	public void postSPFmed(View view) {
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy); 
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/uploadFile.py");
@@ -131,7 +137,12 @@ public class MainActivity extends Activity {
 
 			// Execute HTTP Post Request
 			HttpResponse response = httpclient.execute(httppost);
-
+			//Get string from server's response
+			HttpEntity httpentity = response.getEntity();
+			rstring = EntityUtils.toString(httpentity);
+			System.out.println("RESPONSE IS: ");
+			System.out.println(rstring);
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 		} catch (IOException e) {
@@ -141,6 +152,8 @@ public class MainActivity extends Activity {
 
 	//Called by "slow" button
 	public void postSPFslow(View view) {
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy); 
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/uploadFile.py");
@@ -158,6 +171,11 @@ public class MainActivity extends Activity {
 
 			// Execute HTTP Post Request
 			HttpResponse response = httpclient.execute(httppost);
+			//Get string from server's response
+			HttpEntity httpentity = response.getEntity();
+			rstring = EntityUtils.toString(httpentity);
+			System.out.println("RESPONSE IS: ");
+			System.out.println(rstring);
 
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
@@ -166,6 +184,59 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	//Posts the picture using an HTTP POST to the script on the server which handles incoming pictures.
+		public void clearData(View view) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy); 
+
+			// Create a new HttpClient and Post Header
+			HttpClient httpclient = new DefaultHttpClient();
+			HttpContext localContext = new BasicHttpContext();
+			HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/clear.py");
+
+			try {
+				MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+				double slider_spf;
+				// get slider_spf
+				slider_spf = 0.5;
+
+				// Add your data
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
+				nameValuePairs.add(new BasicNameValuePair("username", "user1"));
+				nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+				nameValuePairs.add(new BasicNameValuePair("clear", "True"));
+				System.out.println("Finished with assigning name-value pairs");
+
+				for(int index=0; index < nameValuePairs.size(); index++) {
+						// Normal string data
+						entity.addPart(nameValuePairs.get(index).getName(), new StringBody(nameValuePairs.get(index).getValue()));	
+				}
+
+				//httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				httppost.setEntity(entity);
+
+				// Execute HTTP Post Request
+				HttpResponse response = httpclient.execute(httppost, localContext);
+				//Get string from server's response
+				HttpEntity httpentity = response.getEntity();
+				rstring = EntityUtils.toString(httpentity);
+				System.out.println("RESPONSE IS: ");
+				System.out.println(rstring);
+
+
+				Context context = getApplicationContext();
+				CharSequence text = "Data Cleared!";
+				int duration = Toast.LENGTH_SHORT;
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
+		} 
 	//Posts the picture using an HTTP POST to the script on the server which handles incoming pictures.
 	public void postData() {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -192,7 +263,7 @@ public class MainActivity extends Activity {
 			System.out.println("Finished with assigning name-value pairs");
 
 			for(int index=0; index < nameValuePairs.size(); index++) {
-				if(nameValuePairs.get(index).getName().equalsIgnoreCase("image")) {
+				if(nameValuePairs.get(index).getName().equalsIgnoreCase("file")) {
 					// If the key equals to "image", we use FileBody to transfer the data
 					entity.addPart(nameValuePairs.get(index).getName(), new FileBody(new File (nameValuePairs.get(index).getValue())));
 				} else {
@@ -206,8 +277,11 @@ public class MainActivity extends Activity {
 
 			// Execute HTTP Post Request
 			HttpResponse response = httpclient.execute(httppost, localContext);
-			System.out.println("got http response:");
-			System.out.println(response);
+			//Get string from server's response
+			HttpEntity httpentity = response.getEntity();
+			rstring = EntityUtils.toString(httpentity);
+			System.out.println("RESPONSE IS: ");
+			System.out.println(rstring);
 
 
 			Context context = getApplicationContext();
@@ -231,9 +305,9 @@ public class MainActivity extends Activity {
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 		}else{
-			String baseURL = "http://ec2-50-19-152-75.compute-1.amazonaws.com/";
+			//String baseURL = "http://ec2-50-19-152-75.compute-1.amazonaws.com/";
 			//Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseURL + "PythonApp/3/gif/3.gif"));
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseURL + rstring));
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(rstring));
 			startActivity(browserIntent);
 		}
 	}
