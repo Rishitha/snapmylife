@@ -52,11 +52,11 @@ public class Register extends Activity {
 		 public void onClick(View v) {
 			 String rspnse = register(txtUserName.getText().toString(), txtPassword.getText().toString()).trim();
 			 if(rspnse.equalsIgnoreCase("True")){
-				 Toast.makeText(Register.this, "Login Successful",Toast.LENGTH_LONG).show();
+				 Toast.makeText(Register.this, "Account Created Successfully",Toast.LENGTH_LONG).show();
 					Intent intent = new Intent(Register.this, MainActivity.class);
 					startActivity(intent);
 			 }else if(rspnse.equalsIgnoreCase("False")){
-				 Toast.makeText(Register.this, "Invalid Login",Toast.LENGTH_LONG).show();
+				 Toast.makeText(Register.this, "Username/Password already in use.",Toast.LENGTH_LONG).show();
 			 }else{
 				 Toast.makeText(Register.this, "Neither True nor False", Toast.LENGTH_LONG).show();
 			 }

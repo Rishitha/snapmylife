@@ -112,6 +112,11 @@ public String login(String username, String password) {
 
 } 
 
+public void registerMe(View view){
+	Intent intent = new Intent(LoginActivity.this, Register.class);
+	startActivity(intent);
+}
+
 }
 
 
