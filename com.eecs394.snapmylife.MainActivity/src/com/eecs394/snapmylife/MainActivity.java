@@ -22,6 +22,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -54,8 +56,15 @@ public class MainActivity extends Activity {
 		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
 	}
+	
+	private static final int CAMERA_PIC_REQUEST = 1337;
+	
+	public void takePicture(View view) {
+		Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+	}
 
-	//After user has chosen a picture, this method is called. It gets the path of the chosen picture and calls postData.
+	//After user has chosen or taken a picture, this method is called. It gets the path of the chosen picture and calls postData.
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
@@ -69,8 +78,27 @@ public class MainActivity extends Activity {
 				System.out.println(currImageStr);
 				postData();
 				System.out.println("After postData in selectPicture");
+			} else if(requestCode == CAMERA_PIC_REQUEST) {
+				System.out.println("CameraPicRequest");
+				currImageURI = data.getData();
+				Bitmap currImageBitmap = (Bitmap) data.getExtras().get("data");
+				System.out.println(currImageBitmap.getWidth());
+				System.out.println(currImageBitmap.getHeight());
+//				if(currImageBitmap.getWidth() > currImageBitmap.getHeight()) {
+//					Matrix matrix = new Matrix();
+//					matrix.postRotate(90);
+//					currImageBitmap = Bitmap.createBitmap(currImageBitmap, 0, 0, currImageBitmap.getWidth(), currImageBitmap.getHeight(), matrix, true);
+//				}
+				
+				System.out.println("URI extracted");
+				System.out.println(currImageURI);
+				currImageStr = getRealPathFromURI(currImageURI);
+				System.out.println("currImageStr is: ");
+				System.out.println(currImageStr);
+				postData();
+				System.out.println("After postData in selectPicture");
 			}
-		}
+		} 
 	}
 
 	//This gets the path from the chosen picture's URI
@@ -295,7 +323,7 @@ public class MainActivity extends Activity {
 		}
 	} 
 	
-	public void launchBrowser(View view){
+	public void launchBrowser(View view) {
 		if(rstring=="*"){
 			Context context = getApplicationContext();
 			CharSequence text = "Please upload a picture first";
@@ -309,7 +337,7 @@ public class MainActivity extends Activity {
 			startActivity(browserIntent);
 		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);

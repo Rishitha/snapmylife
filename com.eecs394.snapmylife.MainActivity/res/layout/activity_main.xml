@@ -14,6 +14,13 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:onClick="selectPicture" />
+
+	    <Button
+	        android:id="@+id/cameraLaunchBtn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Take Picture"
+	        android:onClick="takePicture" />
 	    
 	    <Button
 	        android:text = "See GIF"
@@ -44,6 +51,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" 
 	        android:onClick="postSPFslow"/>
+
 	</LinearLayout>
     
 
