@@ -6,14 +6,14 @@
 	<TableRow> 
 		 <TextView 
 		 android:text="User Name: " 
-		 android:id="@+id/TextView01" 
+		 android:id="@+id/TextView03" 
 		 android:layout_width="wrap_content" 
 		 android:layout_height="wrap_content">
 		 </TextView>
 		 
 		 <EditText 
 		 android:text="" 
-		 android:id="@+id/txtUname" 
+		 android:id="@+id/registerUname" 
 		 android:layout_width="fill_parent" 
 		 android:layout_height="wrap_content">
 	 </EditText>
@@ -23,7 +23,7 @@
 	<TableRow>
 		 <TextView 
 		 android:text="Password: " 
-		 android:id="@+id/TextView02" 
+		 android:id="@+id/TextView04" 
 		 android:layout_width="wrap_content" 
 		 android:layout_height="wrap_content">
 		 </TextView>
@@ -31,7 +31,7 @@
 		
 		 <EditText 
 		 android:text="" 
-		 android:id="@+id/txtPwd" 
+		 android:id="@+id/registerPwd" 
 		 android:layout_width="fill_parent" 
 		 android:layout_height="wrap_content"
 		 android:password="true">
@@ -40,13 +40,12 @@
 	
 	
 	<TableRow>
-	
 		 <Button
 		 android:text="Create Account" 
-		 android:id="@+id/btnLogin" 
+		 android:id="@+id/btnRegister" 
 		 android:layout_width="fill_parent" 
 		 android:layout_height="wrap_content"
-		 android:onClick="login">
+		 android:onClick="register">
 		 </Button>
 	</TableRow>
 
