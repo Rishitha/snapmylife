@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -218,8 +217,8 @@ public class MainActivity extends Activity {
 			StrictMode.setThreadPolicy(policy); 
 
 			// Create a new HttpClient and Post Header
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpContext localContext = new BasicHttpContext();
+			//HttpClient httpclient = new DefaultHttpClient();//Never used, but leaving for the time being because I don't know why it was originally here
+			//HttpContext localContext = new BasicHttpContext();
 			HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/clear.py");
 
 			try {
@@ -242,7 +241,8 @@ public class MainActivity extends Activity {
 				httppost.setEntity(entity);
 
 				// Execute HTTP Post Request
-				HttpResponse response = httpclient.execute(httppost, localContext);
+				//HttpResponse response = httpclient.execute(httppost, localContext); //Never used, but leaving for the time being because I don't know why it was originally here
+				
 				//Get string from server's response
 				//HttpEntity httpentity = response.getEntity();
 				//rstring = EntityUtils.toString(httpentity);
@@ -257,9 +257,10 @@ public class MainActivity extends Activity {
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
 
-			} catch (ClientProtocolException e) {
+			} //catch (ClientProtocolException e) { //Only called if we actually need HttpResponse...
 				// TODO Auto-generated catch block
-			} catch (IOException e) {
+			//} 
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 			}
 		} 
@@ -276,9 +277,9 @@ public class MainActivity extends Activity {
 		try {
 			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-			double slider_spf;
+			//double slider_spf;//Never used, but leaving for the time being because I don't know why it was originally here
 			// get slider_spf
-			slider_spf = 0.5;
+			//slider_spf = 0.5;
 
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
@@ -336,6 +337,11 @@ public class MainActivity extends Activity {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(rstring));
 			startActivity(browserIntent);
 		}
+	}
+	
+	public void launchCamera(View view) {
+		Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+		startActivity(intent);
 	}
 	
 	@Override
