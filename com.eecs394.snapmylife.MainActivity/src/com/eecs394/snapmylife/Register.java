@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -16,7 +15,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -29,6 +27,7 @@ import android.widget.Toast;
 import com.parse.entity.mime.HttpMultipartMode;
 import com.parse.entity.mime.MultipartEntity;
 import com.parse.entity.mime.content.StringBody;
+import com.parse.signpost.http.HttpResponse;
 
 
 public class Register extends Activity {
@@ -94,7 +93,7 @@ public String register(String username, String password) {
 		httppost.setEntity(entity);
 
 		// Execute HTTP Post Request
-		HttpResponse response = httpclient.execute(httppost, localContext);
+		org.apache.http.HttpResponse response = httpclient.execute(httppost, localContext);
 		//Get string from server's response
 		HttpEntity httpentity = response.getEntity();
 		String TF = EntityUtils.toString(httpentity);
