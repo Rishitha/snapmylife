@@ -17,14 +17,18 @@ public final class R {
     public static final class id {
         public static final int TextView01=0x7f070000;
         public static final int TextView02=0x7f070002;
-        public static final int TextView03=0x7f070006;
-        public static final int TextView04=0x7f070008;
+        public static final int TextView03=0x7f070007;
+        public static final int TextView04=0x7f070009;
         public static final int btnCancel=0x7f070004;
         public static final int btnLogin=0x7f070005;
-        public static final int btnRegister=0x7f07000a;
-        public static final int menu_settings=0x7f07000b;
-        public static final int registerPwd=0x7f070009;
-        public static final int registerUname=0x7f070007;
+        public static final int btnRegister=0x7f07000b;
+        public static final int button_capture=0x7f07000d;
+        public static final int cameraLaunchBtn=0x7f070006;
+        public static final int camera_preview=0x7f07000c;
+        public static final int last_image_view=0x7f07000e;
+        public static final int menu_settings=0x7f07000f;
+        public static final int registerPwd=0x7f07000a;
+        public static final int registerUname=0x7f070008;
         public static final int txtPwd=0x7f070003;
         public static final int txtUname=0x7f070001;
     }
@@ -32,6 +36,8 @@ public final class R {
         public static final int activity_login=0x7f030000;
         public static final int activity_main=0x7f030001;
         public static final int activity_register=0x7f030002;
+        public static final int camera_layout_landscape=0x7f030003;
+        public static final int camera_layout_portrait=0x7f030004;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;
@@ -42,6 +48,7 @@ public final class R {
         public static final int menu_settings=0x7f040002;
         public static final int title_activity_login=0x7f040004;
         public static final int title_activity_main=0x7f040003;
+        public static final int title_activity_register=0x7f040005;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;

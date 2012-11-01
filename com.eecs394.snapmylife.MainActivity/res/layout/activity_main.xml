@@ -6,45 +6,76 @@
     
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:orientation="vertical" >
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical" 
+    	android:layout_centerHorizontal="true"
+    	android:layout_centerVertical="true">
 	    <Button
-	        android:text = "Choose picture"
-	        android:layout_width="wrap_content"
+	        android:text = "Add picture to gif"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:onClick="selectPicture" />
+
+	    <Button
+	        android:id="@+id/cameraLaunchBtn"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="Take Picture"
+	        android:onClick="takePicture" />
+	    
+	    <Button
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="API Camera"
+	        android:onClick="launchCamera" />
 	    
 	    <Button
 	        android:text = "See GIF"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:onClick="launchBrowser" />
 	    
 	    <Button 
-	        android:text = "Clear"
-	        android:layout_width="wrap_content"
+	        android:text ="Erase gif"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content" 
 	        android:onClick="clearData"/>
-	    
-	    <Button 
-	        android:text = "Fast"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" 
-	        android:onClick="postSPFfast"/>
-	    
-	    <Button 
-	        android:text = "Medium"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" 
-	        android:onClick="postSPFmed"/>
-	    
-	    <Button 
-	        android:text = "Slow"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" 
-	        android:onClick="postSPFslow"/>
+	    <TextView
+	        android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:gravity="center"
+        	android:text="Change the speed of your gif:"/>
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="horizontal">
+		    <Button 
+		        android:text = "Fast"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:onClick="postSPFfast"/>
+		
+		    <Button 
+		        android:text = "Medium"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:onClick="postSPFmed"/>
+		    
+		    <Button 
+		        android:text = "Slow"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content" 
+		        android:onClick="postSPFslow"/>
+		 </LinearLayout>
+
 	</LinearLayout>
     
+      <Button 
+	        android:text = "Logout"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" 
+	        android:onClick="logout"
+	        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

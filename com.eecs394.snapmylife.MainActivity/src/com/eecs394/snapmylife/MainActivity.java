@@ -1,7 +1,9 @@
 package com.eecs394.snapmylife;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -40,11 +43,32 @@ public class MainActivity extends Activity {
 	Uri currImageURI;
 	String currImageStr = "filler";
 	String rstring = "*";
-
+	String usernameZ = "";
+	String passwordZ = "";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		 try{
+			 File mydir = MainActivity.this.getDir("BeardFlip_Login", Context.MODE_PRIVATE); //Creating an internal dir;
+			 File userPass = new File(mydir, "userPass");
+			 FileInputStream fIn = new FileInputStream(userPass);
+			 InputStreamReader isr = new InputStreamReader(fIn);
+			 char[] inputBuffer = new char[100];
+			 isr.read(inputBuffer);
+			 String readString = new String(inputBuffer);
+			 String[] passArray = readString.split("/");
+			 isr.close();
+			 usernameZ = passArray[0];
+			 passwordZ = passArray[1];
+			 System.out.println(usernameZ);
+			 System.out.println(passwordZ);
+		 }catch(Exception e){
+			 e.printStackTrace();
+		 }
+		
 	}
 
 	//Gets called when user presses "Choose Picture" button. Starts the gallery activity
@@ -54,8 +78,15 @@ public class MainActivity extends Activity {
 		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
 	}
+	
+	private static final int CAMERA_PIC_REQUEST = 1337;
+	
+	public void takePicture(View view) {
+		Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+	}
 
-	//After user has chosen a picture, this method is called. It gets the path of the chosen picture and calls postData.
+	//After user has chosen or taken a picture, this method is called. It gets the path of the chosen picture and calls postData.
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
@@ -69,8 +100,27 @@ public class MainActivity extends Activity {
 				System.out.println(currImageStr);
 				postData();
 				System.out.println("After postData in selectPicture");
+			} else if(requestCode == CAMERA_PIC_REQUEST) {
+				System.out.println("CameraPicRequest");
+				currImageURI = data.getData();
+				Bitmap currImageBitmap = (Bitmap) data.getExtras().get("data");
+				System.out.println(currImageBitmap.getWidth());
+				System.out.println(currImageBitmap.getHeight());
+//				if(currImageBitmap.getWidth() > currImageBitmap.getHeight()) {
+//					Matrix matrix = new Matrix();
+//					matrix.postRotate(90);
+//					currImageBitmap = Bitmap.createBitmap(currImageBitmap, 0, 0, currImageBitmap.getWidth(), currImageBitmap.getHeight(), matrix, true);
+//				}
+				
+				System.out.println("URI extracted");
+				System.out.println(currImageURI);
+				currImageStr = getRealPathFromURI(currImageURI);
+				System.out.println("currImageStr is: ");
+				System.out.println(currImageStr);
+				postData();
+				System.out.println("After postData in selectPicture");
 			}
-		}
+		} 
 	}
 
 	//This gets the path from the chosen picture's URI
@@ -97,8 +147,8 @@ public class MainActivity extends Activity {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
-			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
-			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+			nameValuePairs.add(new BasicNameValuePair("username", usernameZ));
+			nameValuePairs.add(new BasicNameValuePair("password", passwordZ));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
@@ -114,6 +164,11 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+		Context context = getApplicationContext();
+		CharSequence text = "gif set to speed: fast";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
 	//Called by "medium" button
@@ -131,8 +186,8 @@ public class MainActivity extends Activity {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
-			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
-			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+			nameValuePairs.add(new BasicNameValuePair("username", usernameZ));
+			nameValuePairs.add(new BasicNameValuePair("password", passwordZ));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
@@ -148,6 +203,11 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+		Context context = getApplicationContext();
+		CharSequence text = "gif set to speed: medium";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
 	//Called by "slow" button
@@ -165,8 +225,8 @@ public class MainActivity extends Activity {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "speed"));
 			nameValuePairs.add(new BasicNameValuePair("gifSpeed", Double.toString(slider_spf)));
-			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
-			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+			nameValuePairs.add(new BasicNameValuePair("username", usernameZ));
+			nameValuePairs.add(new BasicNameValuePair("password", passwordZ));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
@@ -182,6 +242,11 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+		Context context = getApplicationContext();
+		CharSequence text = "gif set to speed: slow";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 
 	//Posts the picture using an HTTP POST to the script on the server which handles incoming pictures.
@@ -189,7 +254,7 @@ public class MainActivity extends Activity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy); 
 
-			// Create a new HttpClient and Post Header
+			//Create a new HttpClient and Post Header
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpContext localContext = new BasicHttpContext();
 			HttpPost httppost = new HttpPost("http://ec2-50-19-152-75.compute-1.amazonaws.com/PythonApp/clear.py");
@@ -200,8 +265,8 @@ public class MainActivity extends Activity {
 
 				// Add your data
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-				nameValuePairs.add(new BasicNameValuePair("username", "user1"));
-				nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+				nameValuePairs.add(new BasicNameValuePair("username", usernameZ));
+				nameValuePairs.add(new BasicNameValuePair("password", passwordZ));
 				nameValuePairs.add(new BasicNameValuePair("clear", "True"));
 				System.out.println("Finished with assigning name-value pairs");
 
@@ -213,8 +278,9 @@ public class MainActivity extends Activity {
 				//httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				httppost.setEntity(entity);
 
-				// Execute HTTP Post Request
-				HttpResponse response = httpclient.execute(httppost, localContext);
+				//Execute HTTP Post Request
+				HttpResponse response = httpclient.execute(httppost, localContext); //Never used, but leaving for the time being because I don't know why it was originally here
+				
 				//Get string from server's response
 				//HttpEntity httpentity = response.getEntity();
 				//rstring = EntityUtils.toString(httpentity);
@@ -222,16 +288,16 @@ public class MainActivity extends Activity {
 				//System.out.println(rstring);
 				rstring = "*";
 
-
 				Context context = getApplicationContext();
 				CharSequence text = "Data Cleared!";
 				int duration = Toast.LENGTH_SHORT;
 				Toast toast = Toast.makeText(context, text, duration);
 				toast.show();
 
-			} catch (ClientProtocolException e) {
+			} //catch (ClientProtocolException e) { //Only called if we actually need HttpResponse...
 				// TODO Auto-generated catch block
-			} catch (IOException e) {
+			//} 
+			catch (IOException e) {
 				// TODO Auto-generated catch block
 			}
 		} 
@@ -248,15 +314,15 @@ public class MainActivity extends Activity {
 		try {
 			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-			double slider_spf;
+			//double slider_spf;//Never used, but leaving for the time being because I don't know why it was originally here
 			// get slider_spf
-			slider_spf = 0.5;
+			//slider_spf = 0.5;
 
 			// Add your data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 			nameValuePairs.add(new BasicNameValuePair("post_type", "image"));
-			nameValuePairs.add(new BasicNameValuePair("username", "user1"));
-			nameValuePairs.add(new BasicNameValuePair("password", "password1"));
+			nameValuePairs.add(new BasicNameValuePair("username", usernameZ));
+			nameValuePairs.add(new BasicNameValuePair("password", passwordZ));
 			nameValuePairs.add(new BasicNameValuePair("file", currImageStr));
 			System.out.println("Finished with assigning name-value pairs");
 
@@ -283,7 +349,7 @@ public class MainActivity extends Activity {
 
 
 			Context context = getApplicationContext();
-			CharSequence text = "post code complete!";
+			CharSequence text = "Upload Complete!";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
@@ -295,7 +361,7 @@ public class MainActivity extends Activity {
 		}
 	} 
 	
-	public void launchBrowser(View view){
+	public void launchBrowser(View view) {
 		if(rstring=="*"){
 			Context context = getApplicationContext();
 			CharSequence text = "Please upload a picture first";
@@ -309,10 +375,29 @@ public class MainActivity extends Activity {
 			startActivity(browserIntent);
 		}
 	}
-
+	
+	public void launchCamera(View view) {
+		Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+		startActivity(intent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+	
+	public void logout(View view){
+		File mydir = MainActivity.this.getDir("BeardFlip_Login", Context.MODE_PRIVATE); //Creating an internal dir;
+		File userPass = new File(mydir, "userPass");
+		if (userPass.delete()) {
+			System.out.println("File Successfully deleted!");
+			
+		} else {
+			  System.out.println("File not deleted");
+		}
+		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
 	}
 }

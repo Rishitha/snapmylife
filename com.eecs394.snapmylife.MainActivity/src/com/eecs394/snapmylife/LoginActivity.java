@@ -1,5 +1,10 @@
 package com.eecs394.snapmylife;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,28 +48,56 @@ public class LoginActivity extends Activity {
  public void onCreate(Bundle savedInstanceState) {
 	 super.onCreate(savedInstanceState);
 	 setContentView(R.layout.activity_login);
-
+	 
+	 File mydir = LoginActivity.this.getDir("BeardFlip_Login", Context.MODE_PRIVATE); //Creating an internal dir;
+	 File userPass = new File(mydir, "userPass");
+	 //userPass = LoginActivity.this.getFileStreamPath("userPass");
+	 if(userPass.exists()){
+		 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+		startActivity(intent);
+	 }else{ 
+		 
 	 txtUserName=(EditText)this.findViewById(R.id.txtUname);
 	 txtPassword=(EditText)this.findViewById(R.id.txtPwd);
 	 btnLogin=(Button)this.findViewById(R.id.btnLogin);
 	 btnLogin=(Button)this.findViewById(R.id.btnLogin);
 	 btnLogin.setOnClickListener(new OnClickListener() {
 
-
 		 public void onClick(View v) {
+
 			 String rspnse = login(txtUserName.getText().toString(), txtPassword.getText().toString()).trim();
+			 
 			 if(rspnse.equalsIgnoreCase("True")){
-				 Toast.makeText(LoginActivity.this, "Login Successful",Toast.LENGTH_LONG).show();
-					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-					startActivity(intent);
+				Toast.makeText(LoginActivity.this, "Login Successful",Toast.LENGTH_LONG).show();			
+				try{
+					File mydir = LoginActivity.this.getDir("BeardFlip_Login", Context.MODE_PRIVATE); //Creating an internal dir;
+					File userPass = new File(mydir, "userPass"); //Getting a file within the dir.
+					FileOutputStream out = new FileOutputStream(userPass); //Use the stream as usual to write into the file
+					OutputStreamWriter osw = new OutputStreamWriter(out);
+					osw.write(txtUserName.getText().toString());
+					osw.write("/");
+					osw.write(txtPassword.getText().toString());
+					osw.write("/");
+					osw.flush();
+					osw.close();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				
+				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+				startActivity(intent);
 			 }else if(rspnse.equalsIgnoreCase("False")){
 				 Toast.makeText(LoginActivity.this, "Invalid Login",Toast.LENGTH_LONG).show();
 			 }else{
 				 Toast.makeText(LoginActivity.this, "Neither True nor False", Toast.LENGTH_LONG).show();
 			 }
 		 }
-	 });       
+		 
+	 });   
+	 }
  }
+	 
 
 
 
@@ -111,6 +144,11 @@ public String login(String username, String password) {
 	}
 
 } 
+
+public void registerMe(View view){
+	Intent intent = new Intent(LoginActivity.this, Register.class);
+	startActivity(intent);
+}
 
 }
 

@@ -44,8 +44,7 @@
 		 android:text="Create Account" 
 		 android:id="@+id/btnRegister" 
 		 android:layout_width="fill_parent" 
-		 android:layout_height="wrap_content"
-		 android:onClick="register">
+		 android:layout_height="wrap_content">
 		 </Button>
 	</TableRow>
 
