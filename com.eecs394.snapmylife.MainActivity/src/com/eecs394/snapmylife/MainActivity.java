@@ -378,6 +378,8 @@ public class MainActivity extends Activity {
 	
 	public void launchCamera(View view) {
 		Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+		intent.putExtra("username", usernameZ);
+		intent.putExtra("password", passwordZ);
 		startActivity(intent);
 	}
 	

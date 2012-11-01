@@ -1,11 +1,34 @@
 package com.eecs394.snapmylife;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
+import com.parse.entity.mime.HttpMultipartMode;
+import com.parse.entity.mime.MultipartEntity;
+import com.parse.entity.mime.content.FileBody;
+import com.parse.entity.mime.content.StringBody;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,12 +42,15 @@ import android.hardware.Camera.PictureCallback;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 public class CameraActivity extends Activity {
@@ -46,8 +72,8 @@ public class CameraActivity extends Activity {
         	camId = 1;
         }
         mCamera = getCameraInstance(camId);
-        int rotation = setCameraDisplayOrientation(CameraActivity.this, camId, mCamera);
-        if(rotation==90 || rotation==270) {
+        cameraRotation = setCameraDisplayOrientation(CameraActivity.this, camId, mCamera);
+        if(cameraRotation==90 || cameraRotation==270) {
         	setContentView(R.layout.camera_layout_portrait);
         } else {
         	setContentView(R.layout.camera_layout_landscape);
@@ -67,33 +93,75 @@ public class CameraActivity extends Activity {
         parameters.setPreviewSize((size.height*4)/3, size.height);
         mCamera.setParameters(parameters);
 
-        Button captureButton = (Button)findViewById(R.id.button_capture);
-        captureButton.setText("W: " + (size.height*4)/3 + " H: " + size.height);
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         
         preview.addView(mPreview);
         
-        File imgFile = new File(Environment.getExternalStorageDirectory().getPath(), "DCIM/Camera/20121030_172948.jpg");
-        if(imgFile.exists()){
-
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-            ImageView myImage = (ImageView) findViewById(R.id.last_image_view);
-            myImage.setImageBitmap(myBitmap);
-            myImage.setAlpha(127);
-
+        File mydir = CameraActivity.this.getDir("SnapMyLife_Camera", Context.MODE_PRIVATE); //Creating an internal dir;
+        File lastPicFile = new File(mydir, "lastPicFile");
+        String lastFilePath = "";
+        if(lastPicFile.exists()) {
+        	try {
+				BufferedReader in = new BufferedReader(new FileReader(lastPicFile));
+				lastFilePath = in.readLine();
+			} catch (Exception e) {
+				
+			}
         }
+        
+        File imgFile = new File(lastFilePath);
+        int orientation = 0;
+        if(imgFile.exists()){
+        	try {
+				ExifInterface exif = new ExifInterface(lastFilePath);
+				orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	
+        	Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        	Bitmap myBitmapRotate;
+            ImageView myImage = (ImageView) findViewById(R.id.last_image_view);
+//            if(orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+//            	Matrix matrix=new Matrix();
+//            	myImage.setScaleType(ScaleType.MATRIX);   //required
+//            	matrix.preRotate(270, 0, 0);
+//            	myBitmapRotate = Bitmap.createBitmap(myBitmap, 0, 0,myBitmap.getWidth(),myBitmap.getHeight(), matrix, true);
+//            	
+//            	//myImage.setImageMatrix(matrix);
+//            } else if(orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+//            	Matrix matrix=new Matrix();
+//            	myImage.setScaleType(ScaleType.MATRIX);   //required
+//            	matrix.postRotate(180);
+//            	myBitmapRotate = Bitmap.createBitmap(myBitmap, 0, 0,myBitmap.getWidth(),myBitmap.getHeight(), matrix, true);
+//            	//myImage.setImageMatrix(matrix);
+//            } else if(orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+//            	Matrix matrix=new Matrix();
+//            	myImage.setScaleType(ScaleType.MATRIX);   //required
+//            	matrix.postRotate(90);
+//            	myBitmapRotate = Bitmap.createBitmap(myBitmap, 0, 0,myBitmap.getWidth(),myBitmap.getHeight(), matrix, true);
+//            	//myImage.setImageMatrix(matrix);
+//            } else {
+//            	myBitmapRotate = myBitmap;
+//            }
+//            myImage.setImageBitmap(myBitmapRotate);
+            
+
+            myImage.setImageBitmap(myBitmap); 
+
+            myImage.setAlpha(127);
+        }
+        
         
 	}
 
 	private PictureCallback mPicture = new PictureCallback() {
 
 	    public void onPictureTaken(byte[] data, Camera camera) {
-
 	        File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
 	        if (pictureFile == null){
-
 	            return;
 	        }
 
@@ -102,21 +170,45 @@ public class CameraActivity extends Activity {
 	            FileOutputStream fos = new FileOutputStream(pictureFile);
 	            fos.write(data);
 	            fos.close();
-//	            ExifInterface exif = new ExifInterface(currentFilename);
-//	            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_270);
-//	            exif.saveAttributes();
+	            ExifInterface exif;
+	            switch (cameraRotation) {
+		            case 0: 
+		                break;
+		            case 90:
+		            	exif = new ExifInterface(currentFilename);
+			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_90);
+			            exif.saveAttributes();
+			            break;
+		            case 180:
+		            	exif = new ExifInterface(currentFilename);
+			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_180);
+			            exif.saveAttributes();
+			            break;
+		            case 270:
+		            	exif = new ExifInterface(currentFilename);
+			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_270);
+			            exif.saveAttributes();
+			            break;	            
+	            }
 //	            Matrix matrix = new Matrix();
 	            
-	            Bitmap currImageBitmap = (Bitmap) BitmapFactory.decodeFile(currentFilename);
-				if(currImageBitmap.getWidth() > currImageBitmap.getHeight()) {
-					Matrix matrix = new Matrix();
-					matrix.postRotate(90);
-					currImageBitmap = Bitmap.createBitmap(currImageBitmap, 0, 0, currImageBitmap.getWidth(), currImageBitmap.getHeight(), matrix, true);
-				}
+//	            Bitmap currImageBitmap = (Bitmap) BitmapFactory.decodeFile(currentFilename);
+//				if(currImageBitmap.getWidth() > currImageBitmap.getHeight()) {
+//					Matrix matrix = new Matrix();
+//					matrix.postRotate(90);
+//					currImageBitmap = Bitmap.createBitmap(currImageBitmap, 0, 0, currImageBitmap.getWidth(), currImageBitmap.getHeight(), matrix, true);
+//				}
+	            File mydir = CameraActivity.this.getDir("SnapMyLife_Camera", Context.MODE_PRIVATE); //Creating an internal dir;
+	            File lastPicFile = new File(mydir, "lastPicFile");
+            	FileOutputStream out = new FileOutputStream(lastPicFile); //Use the stream as usual to write into the file
+				OutputStreamWriter osw = new OutputStreamWriter(out);
+				osw.write(currentFilename);
+				osw.flush();
+				osw.close();
 	        } catch (FileNotFoundException e) {
-
+	        	
 	        } catch (IOException e) {
-
+	        	
 	        }
 	        mCamera.startPreview();
 	    }
@@ -126,6 +218,18 @@ public class CameraActivity extends Activity {
     public void takePicture(View v) {
         // get an image from the camera
         mCamera.takePicture(null, null, mPicture);
+    }
+    
+    public void showHideLastPic(View view) {
+    	ImageView myImage = (ImageView) findViewById(R.id.last_image_view);
+    	Button showLastButton = (Button)findViewById(R.id.showLastPicBtn);
+    	if(myImage.getVisibility() == View.VISIBLE) {
+    		myImage.setVisibility(View.INVISIBLE);
+    		showLastButton.setText("Overlay Last Picture");
+    	} else if(myImage.getVisibility() == View.INVISIBLE) {
+    		myImage.setVisibility(View.VISIBLE);
+    		showLastButton.setText("Hide Last Picture");
+    	}
     }
 
 	
@@ -225,6 +329,5 @@ public class CameraActivity extends Activity {
 		}
 		return result;
 	}
-
 }
 
