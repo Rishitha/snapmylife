@@ -45,11 +45,15 @@ public class MainActivity extends Activity {
 	String rstring = "*";
 	String usernameZ = "";
 	String passwordZ = "";
+	File sdImageMainDirectory;
+	Uri outputFileUri;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		
 		 try{
 			 File mydir = MainActivity.this.getDir("BeardFlip_Login", Context.MODE_PRIVATE); //Creating an internal dir;
@@ -82,6 +86,12 @@ public class MainActivity extends Activity {
 	private static final int CAMERA_PIC_REQUEST = 1337;
 	
 	public void takePicture(View view) {
+//		Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//		File mydir = MainActivity.this.getDir("BeardFlip_Picture", Context.MODE_PRIVATE); //Creating an internal dir;
+//		File picture = new File(mydir, "picture");
+//		outputFileUri = Uri.fromFile(picture);
+//		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri); 
+//		startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
 		Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
 	}
@@ -103,9 +113,9 @@ public class MainActivity extends Activity {
 			} else if(requestCode == CAMERA_PIC_REQUEST) {
 				System.out.println("CameraPicRequest");
 				currImageURI = data.getData();
-				Bitmap currImageBitmap = (Bitmap) data.getExtras().get("data");
-				System.out.println(currImageBitmap.getWidth());
-				System.out.println(currImageBitmap.getHeight());
+				//Bitmap currImageBitmap = (Bitmap) data.getExtras().get("data");
+				//System.out.println(currImageBitmap.getWidth());
+				//System.out.println(currImageBitmap.getHeight());
 //				if(currImageBitmap.getWidth() > currImageBitmap.getHeight()) {
 //					Matrix matrix = new Matrix();
 //					matrix.postRotate(90);

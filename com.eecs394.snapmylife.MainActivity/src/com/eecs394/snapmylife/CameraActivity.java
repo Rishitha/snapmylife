@@ -2,55 +2,29 @@ package com.eecs394.snapmylife;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-
-import com.parse.entity.mime.HttpMultipartMode;
-import com.parse.entity.mime.MultipartEntity;
-import com.parse.entity.mime.content.FileBody;
-import com.parse.entity.mime.content.StringBody;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.Point;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 
 public class CameraActivity extends Activity {
@@ -171,25 +145,25 @@ public class CameraActivity extends Activity {
 	            fos.write(data);
 	            fos.close();
 	            ExifInterface exif;
-	            switch (cameraRotation) {
-		            case 0: 
-		                break;
-		            case 90:
-		            	exif = new ExifInterface(currentFilename);
-			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_90);
-			            exif.saveAttributes();
-			            break;
-		            case 180:
-		            	exif = new ExifInterface(currentFilename);
-			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_180);
-			            exif.saveAttributes();
-			            break;
-		            case 270:
-		            	exif = new ExifInterface(currentFilename);
-			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_270);
-			            exif.saveAttributes();
-			            break;	            
-	            }
+//	            switch (cameraRotation) {
+//		            case 0: 
+//		                break;
+//		            case 90:
+//		            	exif = new ExifInterface(currentFilename);
+//			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_90);
+//			            exif.saveAttributes();
+//			            break;
+//		            case 180:
+//		            	exif = new ExifInterface(currentFilename);
+//			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_180);
+//			            exif.saveAttributes();
+//			            break;
+//		            case 270:
+//		            	exif = new ExifInterface(currentFilename);
+//			            exif.setAttribute(ExifInterface.TAG_ORIENTATION, ""+ExifInterface.ORIENTATION_ROTATE_270);
+//			            exif.saveAttributes();
+//			            break;	            
+//	            }
 //	            Matrix matrix = new Matrix();
 	            
 //	            Bitmap currImageBitmap = (Bitmap) BitmapFactory.decodeFile(currentFilename);
